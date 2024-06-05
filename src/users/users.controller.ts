@@ -3,13 +3,17 @@ import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { UsersService } from './users.service';
 import { SerializeInterceptor } from 'src/interceptors/serialize.interceptor';
+import { AuthService } from './auth.service';
 
 @Controller('auth')
 export class UsersController {
-    constructor(private usersService: UsersService) { }
+    constructor(
+        private usersService: UsersService,
+        private authService: AuthService,
+    ) { }
 
     @Get('/:id')
-    @UseInterceptors(SerializeInterceptor)
+    // @UseInterceptors(SerializeInterceptor)
     async findUser(@Param('id') id: string) {
         const myUser = await this.usersService.findOne(parseInt(id));
 
@@ -21,7 +25,7 @@ export class UsersController {
     }
 
     @Get()
-    @UseInterceptors(SerializeInterceptor)
+    // @UseInterceptors(SerializeInterceptor)
     async findAllUsers(@Query('email') email: string) {
         const myUser = await this.usersService.find(email);
 
@@ -34,7 +38,7 @@ export class UsersController {
 
     @Post('/signup')
     async createUser(@Body() { email, password }: CreateUserDto) {
-        return await this.usersService.create(email, password);
+        return await this.authService.signUp(email, password);
     }
 
     @Delete('/:id')

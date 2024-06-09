@@ -15,7 +15,7 @@ export class User {
 
     @AfterInsert()
     logInsert() {
-        console.log(`Inserted user with id ${this.id}`);
+        console.log(`Created user with id ${this.id}`);
     }
 
     @AfterRemove()

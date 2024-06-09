@@ -42,6 +42,16 @@ export class UsersController {
         return myUser;
     }
 
+    @Post('/signup')
+    async createUser(@Body() { email, password }: CreateUserDto) {
+        return await this.authService.signUp(email, password);
+    }
+
+    @Post('/signin')
+    async signIn(@Body() {email, password}: CreateUserDto) {
+        return await this.authService.signIn(email, password);
+    }
+
     @Delete('/:id')
     async removeUser(@Param('id') id: string) {
         const idParseInt = parseInt(id);

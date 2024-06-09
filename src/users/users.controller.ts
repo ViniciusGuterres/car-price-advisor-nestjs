@@ -25,6 +25,23 @@ export class UsersController {
         private authService: AuthService,
     ) { }
 
+    @Get('/whoami')
+    whoAmI(@Session() session: any) {
+        return this.usersService.findOne(session.userId);
+    }
+
+    @Get()
+    // @UseInterceptors(SerializeInterceptor)
+    async findAllUsers(@Query('email') email: string) {
+        const myUser = await this.usersService.find(email);
+
+        if (!myUser) {
+            throw new NotFoundException(`User with email ${email} not found`);
+        }
+
+        return myUser;
+    }
+
     @Get('/:id')
     // @UseInterceptors(SerializeInterceptor)
     async findUser(@Param('id') id: string) {
@@ -43,20 +60,9 @@ export class UsersController {
         return myUser;
     }
 
-    @Get()
-    // @UseInterceptors(SerializeInterceptor)
-    async findAllUsers(@Query('email') email: string) {
-        const myUser = await this.usersService.find(email);
-
-        if (!myUser) {
-            throw new NotFoundException(`User with email ${email} not found`);
-        }
-
-        return myUser;
-    }
 
     @Post('/signup')
-    async createUser(@Body() { email, password }: CreateUserDto, @Session() session: any) {
+    async signUp(@Body() { email, password }: CreateUserDto, @Session() session: any) {
         const user = await this.authService.signUp(email, password);
 
         // Added user id to the session

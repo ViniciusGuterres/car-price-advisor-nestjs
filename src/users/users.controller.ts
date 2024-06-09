@@ -1,4 +1,17 @@
-import { Body, Controller, Post, Get, Patch, Param, Query, Delete, NotFoundException, UseInterceptors, BadRequestException } from '@nestjs/common';
+import {
+    Body,
+    Controller,
+    Post,
+    Get,
+    Patch,
+    Param,
+    Query,
+    Delete,
+    NotFoundException,
+    UseInterceptors,
+    BadRequestException,
+    Session
+} from '@nestjs/common';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { UsersService } from './users.service';
@@ -16,11 +29,11 @@ export class UsersController {
     // @UseInterceptors(SerializeInterceptor)
     async findUser(@Param('id') id: string) {
         const idParseInt = parseInt(id);
-        
+
         if (Number.isNaN(idParseInt)) {
             throw new BadRequestException('The id is not a number');
         }
-        
+
         const myUser = await this.usersService.findOne(idParseInt);
 
         if (!myUser) {
@@ -43,19 +56,29 @@ export class UsersController {
     }
 
     @Post('/signup')
-    async createUser(@Body() { email, password }: CreateUserDto) {
-        return await this.authService.signUp(email, password);
+    async createUser(@Body() { email, password }: CreateUserDto, @Session() session: any) {
+        const user = await this.authService.signUp(email, password);
+
+        // Added user id to the session
+        session.userId = user.id;
+
+        return user;
     }
 
     @Post('/signin')
-    async signIn(@Body() {email, password}: CreateUserDto) {
-        return await this.authService.signIn(email, password);
+    async signIn(@Body() { email, password }: CreateUserDto, @Session() session: any) {
+        const user = await this.authService.signIn(email, password);
+
+        // Added user id to the session
+        session.userId = user.id;
+
+        return user;
     }
 
     @Delete('/:id')
     async removeUser(@Param('id') id: string) {
         const idParseInt = parseInt(id);
-        
+
         if (Number.isNaN(idParseInt)) {
             throw new BadRequestException('The id is not a number');
         }
@@ -72,12 +95,12 @@ export class UsersController {
     @Patch('/:id')
     async updateUser(@Param('id') id: string, @Body() body: UpdateUserDto) {
         const idParseInt = parseInt(id);
-        
+
         if (Number.isNaN(idParseInt)) {
             throw new BadRequestException('The id is not a number');
         }
 
-        const myUser = await this.usersService.update(idParseInt, body); 
+        const myUser = await this.usersService.update(idParseInt, body);
 
         if (!myUser) {
             throw new NotFoundException(`User with id ${id} not found`);

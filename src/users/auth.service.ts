@@ -34,10 +34,12 @@ export class AuthService {
     }
 
     async signIn(email: string, password: string) {
+        // Getting my user filtered by email
         const [user] = await this.usersService.find(email);
 
         if (!user) new NotFoundException('Invalid email or password');
 
+        // Build the param password hash to compared to the stored password hash
         const [salt, storedHash] = user.password.split('.');
 
         const hash = (await scrypt(password, salt, 32)) as Buffer;

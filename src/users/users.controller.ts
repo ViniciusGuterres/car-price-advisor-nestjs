@@ -8,15 +8,16 @@ import {
     Query,
     Delete,
     NotFoundException,
-    UseInterceptors,
     BadRequestException,
-    Session
+    Session,
 } from '@nestjs/common';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { UsersService } from './users.service';
-import { SerializeInterceptor } from 'src/interceptors/serialize.interceptor';
 import { AuthService } from './auth.service';
+import { CurrentUser } from './decorators/current-user.decorator';
+import { SerializeInterceptor } from 'src/interceptors/serialize.interceptor';
+import { User } from './user.entity';
 
 @Controller('auth')
 export class UsersController {
@@ -26,8 +27,8 @@ export class UsersController {
     ) { }
 
     @Get('/whoami')
-    whoAmI(@Session() session: any) {
-        return this.usersService.findOne(session.userId);
+    whoAmI(@CurrentUser() user: User): User {
+        return user;
     }
 
     @Get()

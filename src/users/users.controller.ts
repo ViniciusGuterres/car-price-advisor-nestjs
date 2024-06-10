@@ -91,6 +91,7 @@ export class UsersController {
     }
 
     @Delete('/:id')
+    @UseGuards(AuthGuard)
     async removeUser(@Param('id') id: string) {
         const idParseInt = parseInt(id);
 
@@ -108,6 +109,7 @@ export class UsersController {
     }
 
     @Patch('/:id')
+    @UseGuards(AuthGuard)
     async updateUser(@Param('id') id: string, @Body() body: UpdateUserDto) {
         const idParseInt = parseInt(id);
 

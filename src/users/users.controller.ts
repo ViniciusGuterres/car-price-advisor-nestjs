@@ -81,6 +81,11 @@ export class UsersController {
         return user;
     }
 
+    @Post('/signout')
+    signOut(@Session() session: any) {
+        session.userId = null;
+    }
+
     @Delete('/:id')
     async removeUser(@Param('id') id: string) {
         const idParseInt = parseInt(id);

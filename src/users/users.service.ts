@@ -14,6 +14,8 @@ export class UsersService {
     }
 
     async findOne(id: number) {
+        if (!id) return null;
+
         let myUser = await this.repo.findOneBy({ id });
 
         if (!myUser)  myUser = null;

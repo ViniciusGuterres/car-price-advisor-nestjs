@@ -23,12 +23,8 @@ export class UsersService {
         return myUser;
     }
 
-    async find(email: string) {
-        let myUser = await this.repo.find({ where: { email } });
-
-        if (!myUser?.length) myUser = null;
-
-        return myUser;
+    async find(email: string): Promise<Array<User>> {        
+        return await this.repo.find({ where: { email } });
     }
 
     async update(id: number, userNewAttributes: Partial<User>) {

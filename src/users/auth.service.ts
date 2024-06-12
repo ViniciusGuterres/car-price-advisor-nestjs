@@ -37,7 +37,7 @@ export class AuthService {
         // Getting my user filtered by email
         const [user] = await this.usersService.find(email);
 
-        if (!user) new NotFoundException('Invalid email or password');
+        if (!user) throw new NotFoundException('Invalid email or password');
 
         // Build the param password hash to compared to the stored password hash
         const [salt, storedHash] = user.password.split('.');

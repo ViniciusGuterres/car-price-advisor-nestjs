@@ -39,7 +39,7 @@ export class UsersController {
     async findAllUsers(@Query('email') email: string) {
         const myUser = await this.usersService.find(email);
 
-        if (!myUser) {
+        if (!myUser?.length) {
             throw new NotFoundException(`User with email ${email} not found`);
         }
 

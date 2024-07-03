@@ -1,8 +1,6 @@
 import { Test } from "@nestjs/testing";
 import { AuthService } from "./auth.service";
 import { UsersService } from "./users.service";
-import { find } from "rxjs";
-import { create } from "domain";
 
 it('can create an instance of auth service', async () => {
     // Creating a fake copy of users service
@@ -15,10 +13,10 @@ it('can create an instance of auth service', async () => {
         providers: [
             AuthService,
             {
+                // If anyone ask for "UsersService" inside the AuthService, give them the "fakeUserService" object
                 provide: UsersService,
                 useValue: fakeUsersService
-            }
-
+            },
         ],
     }).compile();
 

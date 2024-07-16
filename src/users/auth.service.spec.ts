@@ -50,4 +50,14 @@ describe('AuthService', () => {
 
         await expect(service.signUp('test1223@gmail.com', 'test123')).rejects.toThrow(BadRequestException);
     });
+
+    it('throws an error if signIn is called with an unused email', async (done) => {
+        fakeUsersService.find = () =>
+            Promise.resolve([
+                { email: 'asdf@asdf.com', password: 'laskdjf' } as User,
+            ]);
+        await expect(
+            service.signIn('laskdjf@alskdfj.com', 'passowrd'),
+        ).rejects.toThrow(BadRequestException);
+    });
 });

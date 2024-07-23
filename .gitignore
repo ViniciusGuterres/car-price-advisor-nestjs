@@ -1,6 +1,8 @@
 .env.development
 .env.test
 
+*.pem
+
 # Logs
 logs
 *.log

@@ -13,6 +13,7 @@ import { AuthGuard } from 'src/guards/auth.guards';
 import { CurrentUser } from 'src/users/decorators/current-user.decorator';
 import { User } from 'src/users/user.entity';
 import { ApproveReportDto } from './dtos/approve-report.dto';
+import { AdminGuard } from 'src/guards/admin.guards';
 
 @Controller('reports')
 export class ReportsController {
@@ -25,6 +26,7 @@ export class ReportsController {
     }
 
     @Patch('/:id')
+    @UseGuards(AdminGuard)
     approveUnApproveReport(@Param('id') id: string, @Body() body: ApproveReportDto) {
         const idParseInt = parseInt(id);
 
